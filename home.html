@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Welcome - Minecraft Zone</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom right, #e0f7fa, #f3e5f5);
+      text-align: center;
+      padding: 40px 20px;
+      color: #2e2e2e;
+    }
+
+    .container {
+      background: #f5f5f5;
+      padding: 30px;
+      max-width: 700px;
+      margin: auto;
+      border-radius: 15px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      border: 3px solid #8bc34a;
+    }
+
+    h1 {
+      font-size: 2.8em;
+      color: #388e3c;
+    }
+
+    .character img {
+      width: 180px;
+      height: auto;
+      border-radius: 10px;
+      margin: 20px 0;
+    }
+
+    .character-name {
+      font-size: 24px;
+      color: #4e342e;
+    }
+
+    a {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 25px;
+      background: #558b2f;
+      color: white;
+      text-decoration: none;
+      border-radius: 10px;
+      transition: 0.3s;
+    }
+
+    a:hover {
+      background: #33691e;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1> Welcome to Chill World</h1>
+    <p class="character-name" id="character-name"></p>
+    <div class="character">
+      <img id="character-img" src="" alt="Minecraft Character" />
+    </div>
+    <a href="index.html">Enter Relax & Play</a>
+  </div>
+
+  <script>
+    const characters = [
+      { name: "Steve", img: "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExemd6OHR3emEzMWJrN2VtdmNodGhjOHhjMWYxM2R0cWhxMXc5c2h1bCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/Nx4C51UKPqEpsYDz58/giphy.gif" },
+      { name: "Alex", img: "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExOWFrMG1mOGxuN2tkb2JyOGo0czU5NWhvbDYyZnRmZjFrbmZ0bzRicSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/zOVQ8tftcaCkUyZFBC/giphy.gif" },
+      { name: "Zombie", img: "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExNzRwcHBrNXJpczNrMnN1dGRuZHM5eWxoMjRldHN1enAyemVxam9ocyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/8Fb2yDXsgFKfKyVZRu/giphy.gif" },
+      { name: "Wolf", img: "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExdnp5eGxheXZvN2V4dXlrZGZyN290dzlva2FpMzV1enhkYTMzcWV4cSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/GiSmDZxoMRtrheSSGf/giphy.gif" },
+      { name: "Pig", img: "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExMXVjNnN3MDdqazhhYXBvZTVnemt3bDZkNTgxa3M4NDlzM2FqdDB3dyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/2dhr60BbbQU63qgZbi/giphy.gif" }
+    ];
+
+    const chosen = characters[Math.floor(Math.random() * characters.length)];
+    document.getElementById("character-name").innerText = chosen.name;
+    document.getElementById("character-img").src = chosen.img;
+  </script>
+
+
+</body>
+</html>

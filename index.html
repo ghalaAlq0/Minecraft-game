@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Minecraft Memory Game</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom right, #e0f7fa, #f3e5f5);
+      text-align: center;
+      padding: 20px;
+      color: #2e2e2e;
+    }
+
+    h1 {
+      color: #3e7c47;
+      font-size: 2.5em;
+    }
+
+    .quote {
+      font-size: 18px;
+      margin: 15px 0;
+    }
+
+    .buttons a {
+      display: inline-block;
+      margin: 8px;
+      padding: 10px 20px;
+      background: #4caf50;
+      color: white;
+      text-decoration: none;
+      border-radius: 10px;
+      transition: 0.3s;
+    }
+
+    .buttons a:hover {
+      background: #388e3c;
+    }
+
+    /* لعبة الذاكرة */
+    .game-container {
+      display: grid;
+      grid-template-columns: repeat(6, 70px);
+      gap: 10px;
+      justify-content: center;
+      margin: 30px auto;
+    }
+
+    .card {
+      width: 70px;
+      height: 70px;
+      background-color: #7c6f64;
+      border: 3px solid #4e342e;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 32px;
+      color: transparent;
+      transition: all 0.3s ease;
+      user-select: none;
+    }
+
+    .card.revealed {
+      background-color: #aed581;
+      color: black;
+    }
+
+    .status-box {
+      font-size: 20px;
+      color: #2e7d32;
+      margin: 15px auto;
+      font-weight: bold;
+      background: #dcedc8;
+      border: 2px solid #8bc34a;
+      padding: 10px 20px;
+      display: inline-block;
+      border-radius: 12px;
+    }
+
+    #winMessage {
+      display: none;
+      color: green;
+      font-size: 22px;
+      font-weight: bold;
+      margin-top: 15px;
+    }
+
+    #restartBtn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #558b2f;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: 0.3s;
+    }
+
+    #restartBtn:hover {
+      background: #33691e;
+    }
+
+    .float-home {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      padding: 12px 20px;
+      background: #558b2f;
+      color: white;
+      text-decoration: none;
+      border-radius: 50px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      font-weight: bold;
+      animation: floaty 3s ease-in-out infinite;
+      transition: background 0.3s;
+      z-index: 1000;
+    }
+
+    .float-home:hover {
+      background: #33691e;
+    }
+
+    @keyframes floaty {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🟩 Memory Game 🟫</h1>
+  <p class="quote" id="quote"></p>
+
+  <div class="status-box">
+    ✅ Matches: <span id="matchCount">0</span> |
+    🔁 Attempts: <span id="attemptCount">0</span>
+  </div>
+
+  <p id="winMessage"> You matched them all! Great job!</p>
+
+  <div class="buttons">
+    <a href="about.html">About Me</a>
+    <a href="contact.html">Contact Me</a>
+  </div>
+
+  <div class="game-container" id="game"></div>
+
+  <button id="restartBtn" onclick="location.reload()">♻️ Restart Game</button>
+
+  <a href="home.html" class="float-home">🏠 Back to Home</a>
+
+  <!-- صوت استرخاء من YouTube -->
+  <iframe 
+    width="0" 
+    height="0"
+    src="https://www.youtube.com/embed/qq-RGFyaq0U?autoplay=1&loop=1&playlist=qq-RGFyaq0U&controls=0"
+    frameborder="0"
+    allow="autoplay; encrypted-media"
+    allowfullscreen
+  ></iframe>
+
+  <script>
+    const emojis = [
+      "🌲", "🌲", "🧱", "🧱", "🪓", "🪓", "⛏️", "⛏️",
+      "🐷", "🐷", "🐓", "🐓", "🐺", "🐺", "🌄", "🌄",
+      "🧊", "🧊", "⛺", "⛺", "🪨", "🪨", "🎮", "🎮"
+    ];
+    const game = document.getElementById("game");
+    let revealed = [];
+    let matched = [];
+
+    let matchCount = 0;
+    let attemptCount = 0;
+    const matchDisplay = document.getElementById("matchCount");
+    const attemptDisplay = document.getElementById("attemptCount");
+    const winMessage = document.getElementById("winMessage");
+
+    emojis.sort(() => 0.5 - Math.random());
+
+    emojis.forEach((emoji, index) => {
+      const card = document.createElement("div");
+      card.classList.add("card");
+      card.dataset.emoji = emoji;
+      card.innerText = emoji;
+
+      card.addEventListener("click", () => {
+        if (card.classList.contains("revealed") || revealed.length === 2 || matched.includes(index)) return;
+
+        card.classList.add("revealed");
+        revealed.push({ index, emoji });
+
+        if (revealed.length === 2) {
+          const [first, second] = revealed;
+          if (first.emoji === second.emoji && first.index !== second.index) {
+            matched.push(first.index, second.index);
+            revealed = [];
+            matchCount++;
+            matchDisplay.innerText = matchCount;
+
+            if (matched.length === emojis.length) {
+              winMessage.style.display = "block";
+            }
+          } else {
+            setTimeout(() => {
+              document.querySelectorAll(".card")[first.index].classList.remove("revealed");
+              document.querySelectorAll(".card")[second.index].classList.remove("revealed");
+              revealed = [];
+            }, 800);
+          }
+          attemptCount++;
+          attemptDisplay.innerText = attemptCount;
+        }
+      });
+
+      game.appendChild(card);
+    });
+
+    // اقتباسات
+    const quotes = [
+      " Give yourself a break. You’ve earned it.",
+      " Pause. Breathe. Begin again.",
+      " Don’t let stress craft your story.",
+      " Rest now, rule later.",
+      " Focus is your ultimate tool."
+    ];
+    document.getElementById("quote").innerText = quotes[Math.floor(Math.random() * quotes.length)];
+  </script>
+<!-- Relaxing Music from YouTube -->
+<iframe 
+  width="0" 
+  height="0"
+  src="https://www.youtube.com/embed/qq-RGFyaq0U?autoplay=1&loop=1&playlist=qq-RGFyaq0U&controls=0"
+  frameborder="0"
+  allow="autoplay; encrypted-media"
+  allowfullscreen
+></iframe>
+
+
+</body>
+</html>
